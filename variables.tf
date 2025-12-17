@@ -38,3 +38,9 @@ variable "key_name" {
   description = "Name of an existing AWS key pair to SSH into EC2"
   type        = string
 }
+
+
+variable "ami_id" {
+  description = "AMI ID to use for EC2 (approved in your org)"
+  type        = string
+}

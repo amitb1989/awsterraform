@@ -39,8 +39,9 @@ module "ec2" {
   key_name               = var.key_name
   associate_public_ip    = true
   app_port               = 8080
+  ami_id                 = var.ami_id
   tags                   = {
     Project = "HelloWorld"
-    Owner   = "Dilipbhai"
+    Owner   = "Amit"
   }
 }

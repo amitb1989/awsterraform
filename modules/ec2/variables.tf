@@ -37,3 +37,9 @@ variable "app_port" {
   description = "Application port"
   default     = 8080
 }
+
+
+variable "ami_id" {
+  type        = string
+  description = "AMI ID to use for the EC2 instance"
+}
