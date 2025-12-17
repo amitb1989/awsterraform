@@ -31,11 +31,11 @@ locals {
 
     # Create app directory
     APP_DIR="/opt/helloworld"
-    mkdir -p "${APP_DIR}"
-    chown ec2-user:ec2-user "${APP_DIR}"
+    mkdir -p "$APP_DIR"
+    chown ec2-user:ec2-user "$APP_DIR"
 
     # Write simple Java HTTP server (Hello World)
-    cat > "${APP_DIR}/HelloWorldHttpServer.java" <<'JCODE'
+    cat > "$APP_DIR/HelloWorldHttpServer.java" <<'JCODE'
     import com.sun.net.httpserver.HttpServer;
     import com.sun.net.httpserver.HttpHandler;
     import com.sun.net.httpserver.HttpExchange;
@@ -68,7 +68,7 @@ locals {
     JCODE
 
     # Compile the Java app
-    sudo -u ec2-user bash -c "cd '${APP_DIR}' && javac HelloWorldHttpServer.java"
+    sudo -u ec2-user bash -c "cd "$APP_DIR" && javac HelloWorldHttpServer.java"
 
     # Create systemd service
     cat > /etc/systemd/system/helloworld.service <<'UNIT'
