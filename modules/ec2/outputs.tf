@@ -4,5 +4,5 @@ output "public_ip" {
 }
 
 output "app_port" {
-   value = var.app_port
+  value = var.app_port
 }
