@@ -8,6 +8,7 @@ variable "vpc_id" {
 variable "my_ip_cidr" {
   type        = string
   description = "Your IP in CIDR to allow SSH"
+  default = "172.31.0.0/16"
 }
 
 variable "allow_http_cidr" {
