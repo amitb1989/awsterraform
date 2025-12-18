@@ -8,3 +8,4 @@ output "helloworld_url" {
   value       = "http://${module.ec2.public_ip}:${module.ec2.app_port}/"
   description = "URL to reach the HelloWorld Java app"
 }
+

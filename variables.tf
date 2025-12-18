@@ -44,3 +44,16 @@ variable "ami_id" {
   description = "AMI ID to use for EC2 (approved in your org)"
   type        = string
 }
+
+
+variable "region" {
+  default = "ap-south-1"
+}
+
+variable "subnet_id" {}
+variable "security_group_id" {}
+variable "instance_type" {
+  default = "t3.micro"
+}
+variable "key_name" {}
+variable "ami_id" {}

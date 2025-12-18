@@ -1,26 +1,15 @@
 
-
-
 locals {
   user_data = <<-EOF
     #!/bin/bash
     set -euxo pipefail
+    yum -y update
+    yum -y install java-17-amazon-corretto-devel
 
-    # Update base system, install Java 17 (Amazon Corretto) with javac
-    if command -v dnf >/dev/null 2>&1; then
-      dnf -y update
-      dnf -y install java-17-amazon-corretto-devel
-    else
-      yum -y update
-      yum -y install java-17-amazon-corretto-devel
-    fi
-
-    # Create app directory
     APP_DIR="/opt/helloworld"
     mkdir -p "$APP_DIR"
     chown ec2-user:ec2-user "$APP_DIR"
 
-    # Write simple Java HTTP server (Hello World)
     cat > "$APP_DIR/HelloWorldHttpServer.java" <<'JCODE'
     import com.sun.net.httpserver.HttpServer;
     import com.sun.net.httpserver.HttpHandler;
@@ -53,10 +42,8 @@ locals {
     }
     JCODE
 
-    # Compile the Java app
-    sudo -u ec2-user bash -c "cd "$APP_DIR" && javac HelloWorldHttpServer.java"
+    sudo -u ec2-user bash -c "cd \"$APP_DIR\" && javac HelloWorldHttpServer.java"
 
-    # Create systemd service
     cat > /etc/systemd/system/helloworld.service <<'UNIT'
     [Unit]
     Description=Java Hello World HTTP Server
@@ -65,21 +52,16 @@ locals {
     [Service]
     User=ec2-user
     WorkingDirectory=/opt/helloworld
-    ExecStart=/usr/bin/java HelloWorldHttpServer
+    ExecStart=/usr/bin/java -cp . HelloWorldHttpServer
     Restart=always
     RestartSec=5
-    Environment=JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
 
     [Install]
     WantedBy=multi-user.target
     UNIT
 
-    # Start and enable service
     systemctl daemon-reload
     systemctl enable --now helloworld
-
-    # Firewall not needed (SG handles), just log status
-    systemctl status helloworld --no-pager || true
   EOF
 }
 
@@ -90,10 +72,9 @@ resource "aws_instance" "this" {
   vpc_security_group_ids      = [var.security_group_id]
   associate_public_ip_address = var.associate_public_ip
   key_name                    = var.key_name
-
-  user_data = local.user_data
+  user_data                   = local.user_data
 
   tags = merge({
     Name = "hello-ec2"
-   }, var.tags)
+  }, var.tags)
 }
