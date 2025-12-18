@@ -2,6 +2,7 @@
 variable "vpc_id" {
   type        = string
   description = "VPC ID to attach the security group"
+  default = "vpc-0bb85bb9d8012483b"
 }
 
 variable "my_ip_cidr" {
